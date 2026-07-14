@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deha'nın Büyü Kodları — C# Dersi 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0a0821;
+    --void-2:#140f3a;
+    --nebula:#1e1650;
+    --violet:#8b5cf6;
+    --violet-bright:#b794f6;
+    --gold:#ffc857;
+    --gold-soft:#ffe3a3;
+    --mint:#5eead4;
+    --ink:#efe9ff;
+    --ink-dim:#b8aee0;
+    --card-bg: rgba(30, 22, 80, 0.55);
+    --card-border: rgba(183, 148, 246, 0.35);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: radial-gradient(ellipse at 20% 0%, #201456 0%, var(--void) 45%, #050416 100%);
+    color:var(--ink);
+    font-family:'Quicksand', sans-serif;
+    overflow-x:hidden;
+    position:relative;
+    min-height:100vh;
+  }
+
+  /* --- Yıldız / parıltı arka planı --- */
+  #stars{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+  }
+  .star{
+    position:absolute; border-radius:50%;
+    background:var(--ink);
+    box-shadow:0 0 6px 1px rgba(255,255,255,0.8);
+    animation:twinkle 3.5s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:0.15; transform:scale(0.8); }
+    50%{ opacity:1; transform:scale(1.3); }
+  }
+  @keyframes floatY{
+    0%,100%{ transform:translateY(0px); }
+    50%{ transform:translateY(-14px); }
+  }
+
+  .content{ position:relative; z-index:1; }
+
+  /* --- HERO --- */
+  .hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:40px 20px;
+    position:relative;
+  }
+
+  .wand{
+    font-size:3.2rem;
+    animation:floatY 3.2s ease-in-out infinite;
+    margin-bottom:10px;
+    filter:drop-shadow(0 0 18px var(--gold-soft));
+  }
+
+  .eyebrow{
+    font-family:'Fira Code', monospace;
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    color:var(--mint);
+    font-size:0.85rem;
+    margin-bottom:22px;
+    text-shadow:0 0 12px rgba(94,234,212,0.6);
+  }
+
+  .welcome-line{
+    font-family:'Quicksand', sans-serif;
+    font-weight:600;
+    font-size:clamp(1.1rem, 2.4vw, 1.6rem);
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+
+  .hero h1{
+    font-family:'Cinzel Decorative', serif;
+    font-weight:900;
+    font-size:clamp(3rem, 11vw, 7.5rem);
+    line-height:1.05;
+    background:linear-gradient(180deg, #fff7e0 0%, var(--gold) 45%, #ff9d5c 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 60px rgba(255,200,87,0.35);
+    letter-spacing:0.02em;
+    margin-bottom:18px;
+  }
+
+  .hero-sub{
+    max-width:560px;
+    font-size:clamp(1rem, 1.6vw, 1.2rem);
+    color:var(--ink-dim);
+    line-height:1.6;
+  }
+
+  .hero-sub b{ color:var(--violet-bright); }
+
+  .scroll-hint{
+    margin-top:60px;
+    font-family:'Fira Code', monospace;
+    font-size:0.85rem;
+    color:var(--ink-dim);
+    opacity:0.7;
+    animation:floatY 2.4s ease-in-out infinite;
+  }
+
+  /* --- SECTION genel --- */
+  section.lesson{
+    max-width:920px;
+    margin:0 auto;
+    padding:70px 24px;
+  }
+
+  .section-head{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:34px;
+  }
+
+  .rune{
+    flex:0 0 auto;
+    width:56px; height:56px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.6rem;
+    background:radial-gradient(circle at 35% 30%, rgba(183,148,246,0.5), rgba(30,22,80,0.2));
+    border:1px solid var(--card-border);
+    box-shadow:0 0 24px rgba(139,92,246,0.45);
+  }
+
+  .section-head .titles{ flex:1; }
+
+  .kicker{
+    font-family:'Fira Code', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.25em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+
+  .section-head h2{
+    font-family:'Cinzel Decorative', serif;
+    font-weight:700;
+    font-size:clamp(1.5rem, 3.4vw, 2.3rem);
+    color:var(--ink);
+    margin-top:4px;
+  }
+
+  .lesson p.desc{
+    color:var(--ink-dim);
+    font-size:1.05rem;
+    line-height:1.75;
+    margin-bottom:26px;
+  }
+
+  .lesson p.desc b{ color:var(--mint); font-weight:600; }
+  .lesson p.desc i{ color:var(--gold-soft); font-style:normal; font-weight:600; }
+
+  /* --- kod büyü tomarı --- */
+  .spell-scroll{
+    position:relative;
+    background:linear-gradient(160deg, rgba(20,15,58,0.9), rgba(10,8,33,0.9));
+    border:1px solid var(--card-border);
+    border-radius:16px;
+    padding:22px 26px;
+    box-shadow:0 0 0 1px rgba(139,92,246,0.08), 0 20px 60px -20px rgba(139,92,246,0.5);
+    overflow:hidden;
+  }
+
+  .spell-scroll::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, transparent, var(--violet-bright), var(--mint), transparent);
+    animation:shimmer 4s linear infinite;
+    background-size:200% 100%;
+  }
+  @keyframes shimmer{
+    0%{ background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+  }
+
+  .spell-scroll .label{
+    font-family:'Fira Code', monospace;
+    font-size:0.75rem;
+    color:var(--ink-dim);
+    margin-bottom:10px;
+    display:flex; gap:8px; align-items:center;
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .dot.r{ background:#ff6b6b; } .dot.y{ background:#ffd166; } .dot.g{ background:#5eead4; }
+
+  pre{
+    font-family:'Fira Code', monospace;
+    font-size:0.95rem;
+    line-height:1.7;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+
+  .c-key{ color:#c792ea; }      /* using, class, static, void, Console */
+  .c-type{ color:#82aaff; }     /* string, int */
+  .c-str{ color:#c3e88d; }      /* "metin" */
+  .c-num{ color:#f78c6c; }      /* sayılar */
+  .c-com{ color:#6b6398; font-style:italic; } /* yorumlar */
+  .c-var{ color:#ffcb6b; }      /* değişken adları */
+  .c-fn{ color:#89ddff; }       /* WriteLine */
+
+  .output-box{
+    margin-top:14px;
+    background:rgba(0,0,0,0.35);
+    border:1px dashed rgba(94,234,212,0.4);
+    border-radius:10px;
+    padding:14px 18px;
+    font-family:'Fira Code', monospace;
+    font-size:0.9rem;
+    color:var(--mint);
+  }
+  .output-box .tag{
+    display:block;
+    font-family:'Quicksand', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+
+  /* --- ingredient / malzeme kartları --- */
+  .ingredients{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:18px;
+    margin-top:24px;
+  }
+  .ingredient-card{
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:14px;
+    padding:20px;
+    transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .ingredient-card:hover{
+    transform:translateY(-6px);
+    border-color:var(--violet-bright);
+    box-shadow:0 16px 40px -12px rgba(139,92,246,0.55);
+  }
+  .ingredient-card .icon{ font-size:1.7rem; margin-bottom:10px; }
+  .ingredient-card h3{
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    color:var(--gold-soft);
+    font-size:1.1rem;
+    margin-bottom:8px;
+  }
+  .ingredient-card p{
+    color:var(--ink-dim);
+    font-size:0.92rem;
+    line-height:1.55;
+  }
+  .ingredient-card code{
+    font-family:'Fira Code', monospace;
+    color:var(--mint);
+    background:rgba(94,234,212,0.08);
+    padding:2px 6px;
+    border-radius:6px;
+  }
+
+  /* --- alt bilgi / kapanış --- */
+  footer{
+    text-align:center;
+    padding:80px 24px 60px;
+  }
+  footer .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(135deg, rgba(139,92,246,0.25), rgba(94,234,212,0.15));
+    border:1px solid var(--card-border);
+    padding:14px 26px;
+    border-radius:100px;
+    font-family:'Quicksand', sans-serif;
+    font-weight:600;
+    color:var(--gold-soft);
+    box-shadow:0 0 40px rgba(139,92,246,0.35);
+  }
+  footer p{
+    margin-top:22px;
+    color:var(--ink-dim);
+    font-size:0.9rem;
+  }
+
+  @media (max-width:600px){
+    .hero{ min-height:92vh; }
+    .section-head{ align-items:flex-start; }
+    .rune{ width:46px; height:46px; font-size:1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="content">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wand">🪄✨</div>
+    <div class="eyebrow">C# Büyü Akademisi · Ders 1</div>
+    <div class="welcome-line">Akademinin kapıları senin için açıldı</div>
+    <h1>Hoş geldin,<br>Deha!</h1>
+    <p class="hero-sub">
+      Bugün ilk büyülerini öğreneceksin. Ekrana söz geçirmeyi,
+      <b>kelime</b> ve <b>sayı</b> saklamayı, ve onları tek büyüde
+      birleştirmeyi keşfedeceğiz. Hazırsan, asanı kaldır! 🌟
+    </p>
+    <div class="scroll-hint">↓ aşağı kaydır ve büyülere başla ↓</div>
+  </section>
+
+  <!-- DERS 1: Console.WriteLine -->
+  <section class="lesson" id="ders1">
+    <div class="section-head">
+      <div class="rune">📜</div>
+      <div class="titles">
+        <div class="kicker">Birinci Büyü</div>
+        <h2>Console.WriteLine — Söz Söyleme Büyüsü</h2>
+      </div>
+    </div>
+    <p class="desc">
+      Bu, öğreneceğin <b>en güçlü ilk büyü</b>. <i>Console.WriteLine</i> dediğinde,
+      bilgisayarın ekranına istediğin yazıyı gösterir. Parantez içine yazdığın
+      her şey, tırnak işaretleri arasında bir <b>söz</b> olarak ortaya çıkar.
+    </p>
+
+    <div class="spell-scroll">
+      <div class="label"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span> Buyu.cs</div>
+      <pre><span class="c-key">using</span> System;
+
+<span class="c-key">Console</span>.<span class="c-fn">WriteLine</span>(<span class="c-str">"Merhaba, ben Deha!"</span>);
+<span class="c-key">Console</span>.<span class="c-fn">WriteLine</span>(<span class="c-str">"C# ile büyü yapıyorum."</span>);</pre>
+    </div>
+
+    <div class="output-box">
+      <span class="tag">Ekranda görünen</span>
+      Merhaba, ben Deha!<br>
+      C# ile büyü yapıyorum.
+    </div>
+  </section>
+
+  <!-- DERS 2: string, int -->
+  <section class="lesson" id="ders2">
+    <div class="section-head">
+      <div class="rune">🧪</div>
+      <div class="titles">
+        <div class="kicker">İkinci Büyü</div>
+        <h2>string ve int — Büyü Malzemeleri</h2>
+      </div>
+    </div>
+    <p class="desc">
+      Her büyücünün bir <b>malzeme çantası</b> vardır. C#'ta da bilgiyi saklamak için
+      <i>değişkenler</i> kullanırız. İki temel malzeme türü öğreneceğiz:
+      <b>string</b> (kelime/metin) ve <b>int</b> (tam sayı).
+    </p>
+
+    <div class="spell-scroll">
+      <div class="label"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span> Malzemeler.cs</div>
+      <pre><span class="c-type">string</span> <span class="c-var">isim</span> = <span class="c-str">"Deha"</span>;
+<span class="c-type">int</span> <span class="c-var">yas</span> = <span class="c-num">10</span>;
+
+<span class="c-key">Console</span>.<span class="c-fn">WriteLine</span>(<span class="c-var">isim</span>);
+<span class="c-key">Console</span>.<span class="c-fn">WriteLine</span>(<span class="c-var">yas</span>);</pre>
+    </div>
+
+    <div class="ingredients">
+      <div class="ingredient-card">
+        <div class="icon">🔤</div>
+        <h3>string</h3>
+        <p>Kelime ve cümleleri saklar. Her zaman <code>"çift tırnak"</code> içinde yazılır. Örnek: <code>"Deha"</code></p>
+      </div>
+      <div class="ingredient-card">
+        <div class="icon">🔢</div>
+        <h3>int</h3>
+        <p>Tam sayıları saklar. Tırnak kullanılmaz. Örnek: <code>10</code>, <code>2026</code></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DERS 3: interpolation -->
+  <section class="lesson" id="ders3">
+    <div class="section-head">
+      <div class="rune">💫</div>
+      <div class="titles">
+        <div class="kicker">Üçüncü Büyü</div>
+        <h2>$" {değişken} " — Birleştirme Büyüsü</h2>
+      </div>
+    </div>
+    <p class="desc">
+      İşte akademinin en gösterişli büyüsü! Yazının başına <b>$</b> işareti koyup,
+      süslü parantez <b>{ }</b> içine bir değişken adı yazarsan, o değişkenin değeri
+      doğrudan cümlenin içine karışır. Buna <i>string interpolation</i> denir.
+    </p>
+
+    <div class="spell-scroll">
+      <div class="label"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span> BirlestirmeBuyusu.cs</div>
+      <pre><span class="c-type">string</span> <span class="c-var">isim</span> = <span class="c-str">"Deha"</span>;
+<span class="c-type">int</span> <span class="c-var">yas</span> = <span class="c-num">10</span>;
+
+<span class="c-key">Console</span>.<span class="c-fn">WriteLine</span>(<span class="c-str">$"Merhaba {</span><span class="c-var">isim</span><span class="c-str">}, sen {</span><span class="c-var">yas</span><span class="c-str">} yaşındasın!"</span>);</pre>
+    </div>
+
+    <div class="output-box">
+      <span class="tag">Ekranda görünen</span>
+      Merhaba Deha, sen 10 yaşındasın!
+    </div>
+  </section>
+
+  <footer>
+    <div class="badge">🏆 3 büyüyü de öğrendin, Deha!</div>
+    <p>Bir sonraki derste yeni büyülerle akademiye tekrar bekleriz ✨</p>
+  </footer>
+
+</div>
+
+<script>
+  // Yıldız alanı oluştur
+  const starsContainer = document.getElementById('stars');
+  const starCount = 90;
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2.5 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.animationDelay = (Math.random() * 3.5) + 's';
+    star.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+    starsContainer.appendChild(star);
+  }
+</script>
+
+</body>
+</html>
